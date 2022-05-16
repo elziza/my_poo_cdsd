@@ -1,26 +1,26 @@
 <?php
-namespace App\Models;
-
-use App\Core\Model;
-
+namespace App\Models; 
+ use App\Core\Model;
 class Classe extends Model{
-    private int $id;
+    private int $id;  
     private string $libelle;
     private string $niveau;
     private string $filiere;
 
-        public function __construct()
-        {
-            self::$table="classe";
-        }
-    // onetomany avec cours
-    public function cours():array{
-        $sql="select c.* from cours c,
-        classe cl where c.classe_id=cl.id and cl.id={$this->id}
-        ";
-    
-        return [];
+    public function __construct()
+    {
+        parent::$table="classe";
     }
+
+    //OneToMany avec Cours
+       //Un objet de type Classe contient plusieurs objets de type Cours
+       public function cours():array{
+        $sql="select c.* from cours c, 
+              classe cl where c.classe_id=cl.id and cl.id=? 
+              ";
+        parent::selectWhere($sql,[$this->id]);
+           return [];
+       }
     /**
      * Get the value of id
      */ 

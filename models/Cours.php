@@ -1,40 +1,49 @@
-<?php
+<?php 
 namespace App\Models;
 
 use App\Core\Model;
 
 class Cours extends Model{
     private int $id;
-    // classe de php \ namespace racine
+    //Classe Php \ nameSpace Racine
     private \DateTime $dateCours;
-    private string $heureFin;
     private string $heureDebut;
+    private string $heureFin;
+
 
     public function __construct()
     {
-        self::$table="cours";
+        parent::$table="cours";
     }
 
-    // manytoone avec module 
-    public function module():Module{
-        $sql="select m.* from cours c,
-         module m where c.module_id=m.id and c.id=($this->id)";
-        return new Module;
-    }
 
-    // manytoone avec professeur 
-    public function professeur():Professeur{
-        $sql="select u.* from cours c,
-        module u where c.professeur_id=u.id and c.id={$this->id}
-        and role like 'ROLE_PROFESSEUR";
-        return new Professeur;
-    }
+    //Association
+     //ManyToOne avec Module
+        //un Objet de type Cours contient un objet de type Module
+        //Plusieurs Objet de type Cours sont associes a un objet de type Module
+        public function module():Module{
+            $sql="select m.* from cours c, 
+                  module m where c.module_id=m.id and c.id=?";
+                 parent::selectWhere($sql,[$this->id],true);
+            return new Module();
+        }
+      //ManyToOne avec Professeur
+        //un Objet de type Cours contient un objet de type Professeur
+        //Plusieurs Objet de type Cours sont associes a un objet de type Professeur
 
-    // manytoone avec classe 
-    public function classe():Classe{
-        return new Classe;
-    }
-
+        public function professeur():Professeur{
+            $sql="select u.* from cours c, 
+                  user u where c.professeur_id=u.id and c.id=? 
+                  and role like 'ROLE_PROFESSEUR ";
+                parent::selectWhere($sql,[$this->id],true);
+            return new Professeur();
+        }
+       //ManyToOne avec Classe
+         //un Objet de type Cours contient un objet de type Classe
+        //Plusieurs Objet de type Cours sont associes a un objet de type Classe
+        public function classe():Classe{
+            return new Classe();
+        }
     /**
      * Get the value of id
      */ 
@@ -76,26 +85,6 @@ class Cours extends Model{
     }
 
     /**
-     * Get the value of heureFin
-     */ 
-    public function getHeureFin()
-    {
-        return $this->heureFin;
-    }
-
-    /**
-     * Set the value of heureFin
-     *
-     * @return  self
-     */ 
-    public function setHeureFin($heureFin)
-    {
-        $this->heureFin = $heureFin;
-
-        return $this;
-    }
-
-    /**
      * Get the value of heureDebut
      */ 
     public function getHeureDebut()
@@ -111,6 +100,26 @@ class Cours extends Model{
     public function setHeureDebut($heureDebut)
     {
         $this->heureDebut = $heureDebut;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of heureFin
+     */ 
+    public function getHeureFin()
+    {
+        return $this->heureFin;
+    }
+
+    /**
+     * Set the value of heureFin
+     *
+     * @return  self
+     */ 
+    public function setHeureFin($heureFin)
+    {
+        $this->heureFin = $heureFin;
 
         return $this;
     }

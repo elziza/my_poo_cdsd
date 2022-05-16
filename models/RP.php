@@ -1,5 +1,18 @@
-<?php
+<?php 
 namespace App\Models;
-abstract class Rp extends User{
-    public abstract function affiche();
+class RP extends User {
+    
+    public function __construct()
+    {
+        parent::__construct();
+        parent::$role="ROLE_RP";
+        
+    }
+
+    public static  function selectAll(){
+        $sql="select *  from  ".parent::$table." where role like ? ";
+       return parent::database()->executeSelect($sql,[parent::$role]);
+     }
+
+
 }
