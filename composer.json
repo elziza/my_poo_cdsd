@@ -4,8 +4,17 @@
         "psr-4": {
             "App\\Models\\": "models/",
             "App\\Core\\": "core/",
-            "App\\Controllers\\": "controllers/"
+            "App\\Controllers\\": "controllers/",
+            "App\\Exceptions\\": "exceptions/"
         }
     },
-    "require": {}
-}
+    "authors": [
+        {
+            "name": "elziza",
+            "email": "uodbazpoid@gmail.com"
+        }
+    ],
+    "require": {
+        "rakit/validation": "^1.4"
+    }
+    }

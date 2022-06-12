@@ -1,6 +1,7 @@
 <?php 
 namespace App\Core;
 
+use App\Models\Classe;
 use App\Exceptions\BdConnexionException;
 
 
@@ -8,6 +9,8 @@ class DataBase{
     //Connexion a la BD
     private \PDO|null $pdo=null;//Pas de connexion
     //Mode Deconnecte
+
+    private string $className;
     public function openConnexion(){
         //host : adresse du server BD
         try {
@@ -25,6 +28,7 @@ class DataBase{
     }
 
     public function executeSelect(string $sql,array $data=[],$single=false){
+       // dd(get_called_class());
       //Requete non preparee  => Pas du Securise
       //Requete dont les variables sont injectees a l'ecriture
        // $id=1;
@@ -37,8 +41,9 @@ class DataBase{
        // $sql="Select * from classe where id=? and role like ? ";
          $stm=$this->pdo->prepare($sql);
          $stm->execute($data);
+         $stm->setFetchMode(\PDO::FETCH_CLASS,$this->className);
         if($single){
-            $result=$stm->fetch();
+            $result=$stm->fetch();//Both
         }else{
             $result=$stm->fetchAll();
         }
@@ -55,5 +60,17 @@ class DataBase{
          $result=$stm->rowCount();
         $this->closeConnexion();
         return  $result;
+    }
+
+    /**
+     * Set the value of className
+     *
+     * @return  self
+     */ 
+    public function setClassName($className)
+    {
+        $this->className = $className;
+
+        return $this;
     }
 }

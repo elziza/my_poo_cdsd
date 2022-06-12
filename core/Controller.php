@@ -1,7 +1,12 @@
 <?php 
 namespace App\Core;
+
+use App\Core\Role;
+use App\Core\Session;
+
 class Controller{
     protected Request $request;
+    protected string $layout="base";
     public function __construct(Request $request)
     {
         $this->request= $request;
@@ -12,9 +17,29 @@ class Controller{
         header("location:$url");
     }
 
-    public function render(string $path){
+    public function render(string $path,array $data=[]){
+      $data['request']=$this->request;
+      $data['Session']=Session::class;
+      $data['Role']=Role::class;
+      ob_start();
+      extract($data);
         require_once(ROOT."views/".$path.".html.php");
+          $content_for_views=ob_get_clean();
+        require_once(ROOT."views/layout/".$this->layout.".html.php");
     }
 
 
 }
+
+/**
+ * $x=[
+ *    'nom'=> "Diop",
+ *    'prenom'=> "Amadou",
+ * ]
+ * echo $x['nom'];//Diop
+ * echo $x['prenom'];//Amadou
+ * 
+ * extract($x);
+ * echo $nom;//Diop
+ * echo $prenom;//Amadou
+ */

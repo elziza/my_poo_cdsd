@@ -15,4 +15,16 @@ class Request {
     public function isGet():bool{
         return $_SERVER["REQUEST_METHOD"]=="GET";
     }
+
+   public function request():array{
+          return $_POST;
+   }
+   public function query():array{
+       $url=$this->getUrl();
+       unset($url[0]);//WEB_URL
+       unset($url[1]);//Route
+       return array_values($url);
+}
+
+
 }
